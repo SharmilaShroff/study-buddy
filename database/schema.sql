@@ -1,0 +1,85 @@
+CREATE DATABASE IF NOT EXISTS studybuddy;
+USE studybuddy;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(150) NOT NULL,
+    email VARCHAR(190) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    preferred_mode VARCHAR(50) DEFAULT 'Student Mode',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS otp_verification (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(190) NOT NULL,
+    otp_code VARCHAR(10) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    is_used TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS uploaded_sources (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    session_id VARCHAR(100) NOT NULL,
+    source_type VARCHAR(30) NOT NULL,
+    source_name VARCHAR(255) NOT NULL,
+    source_value TEXT NOT NULL,
+    extracted_text LONGTEXT,
+    topic VARCHAR(255) DEFAULT '',
+    is_public TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS generated_outputs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    session_id VARCHAR(100) NOT NULL,
+    output_type VARCHAR(50) NOT NULL,
+    content LONGTEXT NOT NULL,
+    difficulty_level VARCHAR(30) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS quiz_scores (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    session_id VARCHAR(100) NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    score INT NOT NULL,
+    total_questions INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_history (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    action_name VARCHAR(100) NOT NULL,
+    action_details TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS leaderboard (
+    user_id INT PRIMARY KEY,
+    total_score INT NOT NULL DEFAULT 0,
+    games_played INT NOT NULL DEFAULT 0,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS public_textbooks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    source_id INT NOT NULL UNIQUE,
+    user_id INT NOT NULL,
+    textbook_name VARCHAR(255) NOT NULL,
+    topic VARCHAR(255) DEFAULT '',
+    content LONGTEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (source_id) REFERENCES uploaded_sources(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
