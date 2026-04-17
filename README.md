@@ -1,3 +1,7 @@
+https://study-buddy-ljekjhter6d4dh6kvymbdp.streamlit.app/
+
+
+
 # 🎓 StudyBuddy AI — Smart Learning Assistant Platform
 
 An AI-Powered Smart Learning Assistant built with **Streamlit** + **MySQL** + **Google Gemini API**.
