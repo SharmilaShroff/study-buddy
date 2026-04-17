@@ -1,4 +1,4 @@
-https://study-buddy-ljekjhter6d4dh6kvymbdp.streamlit.app/
+
 https://study-buddy-y2yg.onrender.com
 
 
