@@ -1,6 +1,5 @@
 streamlit==1.44.1
 python-dotenv==1.0.1
-mysql-connector-python==9.2.0
 passlib[bcrypt]==1.7.4
 openai>=1.0.0
 huggingface-hub==0.30.2
